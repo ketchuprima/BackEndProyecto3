@@ -1,7 +1,6 @@
 package com.back.app.modelos;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -38,9 +37,28 @@ public class User implements Serializable{
 	@NotNull
 	private String pass;
 	
+	@Size(max = 50)
+	@NotNull
+	private String nom;
+	
+	@Size(max = 100)
+	@NotNull
+	private String cognoms;
+	
+	@Size(min = 12, max = 12)
+	@NotNull
+	private String telefon;
+	
+	
 	@ManyToMany
 	@JoinTable(name = "rol_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "rol_id"))
 	private Set<Rol> roles;
+	
+	public User(String email, String pass) {
+		this.email=email;
+		this.pass=pass;
+		
+	}
 	
 	private static final long serialVersionUID = -2422977159875418682L;
 

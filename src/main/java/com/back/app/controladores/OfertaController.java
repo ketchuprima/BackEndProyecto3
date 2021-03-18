@@ -26,12 +26,20 @@ import com.back.app.responses.MensajeRespuesta;
 @RequestMapping("/ofertes")
 public class OfertaController {
 	
+	//Estado 0 = para validar por admin
+	//Estado 1 = validado por un admin
+	
 	@Autowired
 	private OfertaRepository ofertaRepository;
 	
 	@GetMapping("/")
 	public List<Oferta> findOferta(){
-		return ofertaRepository.findAll();
+		return ofertaRepository.findByEstat(1);
+	}
+	
+	@GetMapping("/perValidar")
+	public List<Oferta> findOfertaPerValidar(){
+		return ofertaRepository.findByEstat(0);
 	}
 	
 	@PostMapping("/crear")
@@ -39,6 +47,7 @@ public class OfertaController {
 		oferta.setId(null);
 		oferta.setData_de_publicacio(LocalDateTime.now());
 		oferta.setCandidats(null);
+		oferta.setEstat(0);
 		return ofertaRepository.save(oferta);
 	}
 	
@@ -50,11 +59,24 @@ public class OfertaController {
 			oferta.setId(ofertaSinActualizar.getId());
 			oferta.setEmpresa(ofertaSinActualizar.getEmpresa());
 			oferta.setCandidats(ofertaSinActualizar.getCandidats());
+			oferta.setEstat(ofertaSinActualizar.getEstat());
 			ofertaRepository.save(oferta);
 		}else
-			throw new NoEncontradoException("No existe esta empresa");
+			throw new NoEncontradoException("No existe esta oferta");
 		
 		return ofertaRepository.findById(idOferta).get();
+	}
+	
+	@PutMapping("actualizarEstado/{idOferta}")
+	public MensajeRespuesta updateEstadoOferta(@PathVariable Long idOferta) throws NoEncontradoException {
+		if(ofertaRepository.existsById(idOferta)) {
+			Oferta oferta = ofertaRepository.findById(idOferta).get();
+			oferta.setEstat(1);
+			ofertaRepository.save(oferta);
+		}else
+			throw new NoEncontradoException("No existe esta oferta");
+		
+		return new MensajeRespuesta("ok");
 	}
 	
 	@DeleteMapping("eliminar/{idOferta}")
@@ -63,7 +85,7 @@ public class OfertaController {
 		if(ofertaRepository.existsById(idOferta)) 
 			ofertaRepository.deleteById(idOferta);
 		else
-			throw new NoEncontradoException("No existe esta empresa");
+			throw new NoEncontradoException("No existe esta oferta");
 		return new MensajeRespuesta("ok");
 	}
 

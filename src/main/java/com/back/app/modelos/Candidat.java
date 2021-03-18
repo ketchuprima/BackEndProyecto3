@@ -35,18 +35,6 @@ public class Candidat implements Serializable{
 	@NotNull
 	private User user;
 	
-	@Size(max = 50)
-	@NotNull
-	private String nom;
-	
-	@Size(max = 100)
-	@NotNull
-	private String cognoms;
-	
-	@Size(min = 11, max = 11)
-	@NotNull
-	private Integer telefon;
-	
 	@ManyToMany
 	@JoinTable(name = "candidat_oferta", joinColumns = @JoinColumn(name = "oferta_id"), inverseJoinColumns = @JoinColumn(name = "candidat_id"))
 	@JsonBackReference(value = "candidatOferta")
