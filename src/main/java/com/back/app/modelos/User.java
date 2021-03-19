@@ -15,6 +15,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -35,6 +37,7 @@ public class User implements Serializable{
 	
 	@Size(max = 255)
 	@NotNull
+	@JsonBackReference(value = "userPass")
 	private String pass;
 	
 	@Size(max = 50)

@@ -18,6 +18,7 @@ import com.back.app.modelos.User;
 import com.back.app.repositorios.CandidatRepository;
 import com.back.app.repositorios.OfertaRepository;
 import com.back.app.repositorios.UserRepository;
+import com.back.app.responses.MensajeRespuesta;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -35,7 +36,7 @@ public class CandidatController {
 	
 	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/crearCandidatura/{idOferta}")
-	public Candidat createCandidat(Authentication authentication, @PathVariable Long idOferta) {
+	public MensajeRespuesta createCandidat(Authentication authentication, @PathVariable Long idOferta) {
 		String email = authentication.getName();
 		User user = userRepository.findByEmail(email).get();
 		List<Oferta> ofertesCandidat = new ArrayList<>();
@@ -45,25 +46,17 @@ public class CandidatController {
 			candidat.setUser(user);
 			ofertesCandidat.add(ofertaRepository.findById(idOferta).get());
 			candidat.setOfertes(ofertesCandidat);
+			candidatRepository.save(candidat);
 			
 		}else {
 			Candidat candidat = candidatRepository.findByUser(user);
-			for(Oferta o: candidat.getOfertes()) {
-				ofertesCandidat.add(o);
-			}
-			ofertesCandidat.add(ofertaRepository.findById(idOferta).get());
-			candidat.setOfertes(ofertesCandidat);
+
+			candidat.getOfertes().add(ofertaRepository.findById(idOferta).get());
+
+			candidatRepository.save(candidat);
 		}
-		/*User user = userRepository.findByEmail(email).get();
 		
-		candidatRepository.findByUser(user);
-		Candidat candidat = new Candidat();
-		candidatRepository.findBy
-		candidat.setId(null);
-		candidat.setUser();
-		candidat.setOfertes(ofertes);*/
-		
-		return null;
+		return new MensajeRespuesta("ok");
 	}
 
 }

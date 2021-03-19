@@ -12,7 +12,7 @@ public interface CandidatRepository extends JpaRepository<Candidat, Long>{
 	
 	public Candidat findByUser(User user);
 	
-	@Query(value="SELECT EXISTS(SELECT * FROM candidat WHERE user_id = idUser)", nativeQuery=true)
+	@Query(value="SELECT EXISTS(SELECT * FROM candidat WHERE user_id = :idUser)", nativeQuery=true)
 	public Integer existsByUser(Long idUser);
 
 }

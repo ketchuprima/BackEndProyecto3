@@ -23,5 +23,4 @@ public class CategoriaController {
 	public List<Categoria> findCategoria(){
 		return categoriaRepository.findAll();
 	}
-
 }

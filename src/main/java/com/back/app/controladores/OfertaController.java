@@ -2,6 +2,7 @@ package com.back.app.controladores;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.back.app.exceptions.NoEncontradoException;
 import com.back.app.modelos.Oferta;
 import com.back.app.repositorios.OfertaRepository;
+import com.back.app.responses.EstadisticasCategoria;
 import com.back.app.responses.MensajeRespuesta;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -40,6 +42,54 @@ public class OfertaController {
 	@GetMapping("/perValidar")
 	public List<Oferta> findOfertaPerValidar(){
 		return ofertaRepository.findByEstat(0);
+	}
+	
+	@GetMapping("/{idOferta}")
+	public Optional<Oferta> findOfertaById(@PathVariable Long idOferta) {
+		return ofertaRepository.findById(idOferta);
+	}
+	
+	@GetMapping("/estadisticas/categorias")
+	public EstadisticasCategoria findEstadisticasCategoria(){
+		
+		List<Oferta> listaOfertas = ofertaRepository.findByEstat(1);
+		
+		EstadisticasCategoria estadisticasCategorias = new EstadisticasCategoria();
+
+		for(Oferta o: listaOfertas) {
+			if(o.getCategoria().getNom().equals("DAM")) {
+				estadisticasCategorias.setDam(estadisticasCategorias.getDam() + 1);
+			}else if(o.getCategoria().getNom().equals("DAW")) {
+				estadisticasCategorias.setDaw(estadisticasCategorias.getDaw() + 1);
+			}else if(o.getCategoria().getNom().equals("ASIX")) {
+				estadisticasCategorias.setAsix(estadisticasCategorias.getAsix() + 1);
+			}else {
+				estadisticasCategorias.setSmix(estadisticasCategorias.getSmix() + 1);
+			}
+		}
+			
+		return estadisticasCategorias;
+	}
+	
+	@GetMapping("/estadisticas/ofertas")
+	public EstadisticasCategoria findEstadisticasOfertas() {
+		List<Oferta> listaOfertas = ofertaRepository.findByEstat(1);
+		
+		EstadisticasCategoria estadisticasCategorias = new EstadisticasCategoria();
+
+		for(Oferta o: listaOfertas) {
+			if(o.getCategoria().getNom().equals("DAM")) {
+				estadisticasCategorias.setDam(estadisticasCategorias.getDam() + o.getCandidats().size());
+			}else if(o.getCategoria().getNom().equals("DAW")) {
+				estadisticasCategorias.setDaw(estadisticasCategorias.getDaw() + o.getCandidats().size());
+			}else if(o.getCategoria().getNom().equals("ASIX")) {
+				estadisticasCategorias.setAsix(estadisticasCategorias.getAsix() + o.getCandidats().size());
+			}else {
+				estadisticasCategorias.setSmix(estadisticasCategorias.getSmix() + o.getCandidats().size());
+			}
+		}
+		
+		return estadisticasCategorias;
 	}
 	
 	@PostMapping("/crear")

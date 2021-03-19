@@ -3,6 +3,7 @@ package com.back.app.modelos;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,7 +37,7 @@ public class Candidat implements Serializable{
 	private User user;
 	
 	@ManyToMany
-	@JoinTable(name = "candidat_oferta", joinColumns = @JoinColumn(name = "oferta_id"), inverseJoinColumns = @JoinColumn(name = "candidat_id"))
+	@JoinTable(name = "candidat_oferta", joinColumns = @JoinColumn(name = "candidat_id"), inverseJoinColumns = @JoinColumn(name = "oferta_id"))
 	@JsonBackReference(value = "candidatOferta")
 	private List<Oferta> ofertes;
 	
