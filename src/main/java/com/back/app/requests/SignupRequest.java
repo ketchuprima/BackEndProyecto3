@@ -36,4 +36,17 @@ public class SignupRequest {
     
     @Size(max = 45)
     private Set<String> role;
+    
+    @Size(max = 100)
+    private String nomEmpresa;
+    
+    @Size(max = 255)
+    private String tipus;
+    
+    @Size(max = 255)
+    private String logo;
+    
+    @Size(max = 255)
+    @Email
+    private String correu;
 }

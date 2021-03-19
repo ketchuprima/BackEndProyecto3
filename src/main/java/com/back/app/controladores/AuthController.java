@@ -19,14 +19,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.back.app.exceptions.NoEncontradoException;
+import com.back.app.modelos.Empresa;
 import com.back.app.modelos.Rol;
 import com.back.app.modelos.User;
 import com.back.app.repositorios.RolRepository;
 import com.back.app.repositorios.UserRepository;
+import com.back.app.repositorios.EmpresaRepository;
 import com.back.app.requests.LoginRequest;
 import com.back.app.requests.SignupRequest;
 import com.back.app.responses.JwtResponse;
@@ -47,6 +50,9 @@ public class AuthController {
 
 	@Autowired
 	RolRepository roleRepository;
+	
+	@Autowired
+	EmpresaRepository empresaRepository;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -85,7 +91,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest)
+	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, @RequestParam(required = false) String empresa)
 			throws NoEncontradoException {
 
 		if (userRepository.existsByEmail(signUpRequest.getEmail()) == 1) {
@@ -94,10 +100,11 @@ public class AuthController {
 
 		User user = new User(signUpRequest.getEmail(), encoder.encode(signUpRequest.getPass()));
 		Set<String> strRoles = signUpRequest.getRole();
-		// System.out.println(strRoles);
-		// System.out.println(user.getIdPersona().getIdPersona());
 		Set<Rol> roles = new HashSet<>();
-
+		
+		if(empresa != null)
+			roles.add(roleRepository.findByNombre("ROLE_EMPRESA").get());
+		
 		if (strRoles == null) {
 			Rol userRole = roleRepository.findByNombre("ROLE_USER")
 					.orElseThrow(() -> new RuntimeException("No se encuentra el rol user"));
@@ -124,7 +131,13 @@ public class AuthController {
 		user.setCognoms(signUpRequest.getCognoms());
 		user.setTelefon(signUpRequest.getTelefon());
 		userRepository.save(user);
-		resultado = ResponseEntity.ok(new MensajeRespuesta("El usuario ha sido registrado correctamente"));
+		
+		if(empresa != null) {
+			Empresa crearEmpresa = new Empresa(signUpRequest.getNomEmpresa(), signUpRequest.getTipus(), signUpRequest.getLogo(), signUpRequest.getCorreu(), user);
+			empresaRepository.save(crearEmpresa);
+			resultado = ResponseEntity.ok(new MensajeRespuesta("Usuario y empresa creados correctamente"));
+		}else
+			resultado = ResponseEntity.ok(new MensajeRespuesta("El usuario ha sido registrado correctamente"));
 
 		return resultado;
 	}

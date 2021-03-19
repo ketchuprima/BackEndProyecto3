@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "empresa")
 public class Empresa implements Serializable{
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -56,6 +56,20 @@ public class Empresa implements Serializable{
 	@JsonBackReference(value = "empresaOferta")
 	private List<Oferta> ofertes;
 	
+	
+	
+	public Empresa(String nom, String tipus, String logo, String correu, User user) {
+		this.id = null;
+		this.user = user;
+		this.nom = nom;
+		this.tipus = tipus;
+		this.logo = logo;
+		this.correu = correu;
+		this.ofertes = null;
+	}
+
+
+
 	private static final long serialVersionUID = -1085921810573003719L;
 
 }
