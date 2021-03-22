@@ -48,7 +48,7 @@ public class User implements Serializable{
 	@NotNull
 	private String cognoms;
 	
-	@Size(min = 12, max = 12)
+	@Size(min = 9, max = 9)
 	@NotNull
 	private String telefon;
 	
