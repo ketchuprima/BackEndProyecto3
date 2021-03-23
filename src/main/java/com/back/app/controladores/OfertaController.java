@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.back.app.exceptions.NoEncontradoException;
+import com.back.app.modelos.Categoria;
+import com.back.app.modelos.Empresa;
 import com.back.app.modelos.Oferta;
+import com.back.app.repositorios.CategoriaRepository;
+import com.back.app.repositorios.EmpresaRepository;
 import com.back.app.repositorios.OfertaRepository;
 import com.back.app.responses.EstadisticasCategoria;
 import com.back.app.responses.MensajeRespuesta;
@@ -33,6 +38,12 @@ public class OfertaController {
 	
 	@Autowired
 	private OfertaRepository ofertaRepository;
+	
+	@Autowired
+	private EmpresaRepository empresaRepository;
+	
+	@Autowired
+	private CategoriaRepository categoriaRepository;
 	
 	@GetMapping("/")
 	public List<Oferta> findOferta(){
@@ -92,12 +103,26 @@ public class OfertaController {
 		return estadisticasCategorias;
 	}
 	
+	@GetMapping("/prueba")
+	public List<Oferta> prueba(@RequestParam(value = "categoria", required = false) Long categoria,
+			@RequestParam(value = "ubicacio", required = false) String ubicacio,
+			@RequestParam(value = "titol", required = false) String titol,
+			@RequestParam(value = "empresa", required = false) Long empresa,
+			@RequestParam(value = "order", required = false) String order){
+		
+		
+		
+		return ofertaRepository.findfertasByParameters(categoria, ubicacio, titol, empresa, order);
+		
+	}
+	
 	@PostMapping("/crear")
 	public Oferta createOferta(@Valid @RequestBody Oferta oferta) {
 		oferta.setId(null);
 		oferta.setData_de_publicacio(LocalDateTime.now());
 		oferta.setCandidats(null);
 		oferta.setEstat(0);
+		
 		return ofertaRepository.save(oferta);
 	}
 	
@@ -107,6 +132,7 @@ public class OfertaController {
 		if(ofertaRepository.existsById(idOferta)) {
 			ofertaSinActualizar = ofertaRepository.findById(idOferta).get();
 			oferta.setId(ofertaSinActualizar.getId());
+			oferta.setData_de_publicacio(ofertaSinActualizar.getData_de_publicacio());
 			oferta.setEmpresa(ofertaSinActualizar.getEmpresa());
 			oferta.setCandidats(ofertaSinActualizar.getCandidats());
 			oferta.setEstat(ofertaSinActualizar.getEstat());
