@@ -19,6 +19,7 @@ import com.back.app.repositorios.CandidatRepository;
 import com.back.app.repositorios.OfertaRepository;
 import com.back.app.repositorios.UserRepository;
 import com.back.app.responses.MensajeRespuesta;
+import com.back.app.services.EmailService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -34,9 +35,12 @@ public class CandidatController {
 	@Autowired
 	private OfertaRepository ofertaRepository;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/crearCandidatura/{idOferta}")
-	public MensajeRespuesta createCandidat(Authentication authentication, @PathVariable Long idOferta) {
+	public MensajeRespuesta createCandidat(Authentication authentication, @PathVariable Long idOferta){
 		String email = authentication.getName();
 		User user = userRepository.findByEmail(email).get();
 		List<Oferta> ofertesCandidat = new ArrayList<>();
@@ -55,6 +59,8 @@ public class CandidatController {
 
 			candidatRepository.save(candidat);
 		}
+		
+		//emailService.sendSimpleMessage(usuario.getEmail(), "Mensaje generado para su contraseña", pass, null);
 		
 		return new MensajeRespuesta("ok");
 	}

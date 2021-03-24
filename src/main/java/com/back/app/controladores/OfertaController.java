@@ -93,7 +93,7 @@ public class OfertaController {
 		return estadisticasCategorias;
 	}
 	
-	@GetMapping("/prueba")
+	@GetMapping("/filtros")
 	public List<Oferta> prueba(@RequestParam(value = "categoria", required = false) Long categoria,
 			@RequestParam(value = "ubicacio", required = false) String ubicacio,
 			@RequestParam(value = "titol", required = false) String titol,
