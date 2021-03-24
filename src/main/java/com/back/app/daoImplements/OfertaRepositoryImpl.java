@@ -20,34 +20,20 @@ public class OfertaRepositoryImpl implements OfertaRepositoryCustom{
 	public List<Oferta> findfertasByParameters(Long categoria, String ubicacio, String titol, Long empresa,
 			String order) {
 		
-		Boolean firstCond = false;
-		
-		String select = "SELECT * FROM oferta ";
+		String select = "SELECT * FROM oferta WHERE estat = 1";
 
-        if(categoria != null && firstCond)
+        if(categoria != null)
         	select += " AND categoria_id = " + categoria;
-        else if(categoria != null && !firstCond){
-        	select += "WHERE categoria_id = " + categoria;
-        	firstCond = true;
-        }
-        if(ubicacio != null && firstCond)
+  
+        if(ubicacio != null)
         	select += " AND ubicacio = '" + ubicacio + "'";
-        else if(ubicacio != null && !firstCond) {
-        	select +="WHERE ubicacio = '" + ubicacio + "'";
-        	firstCond = true;
-        }
-        if(titol != null && firstCond)
+
+        if(titol != null)
         	select += " AND titol = '" + titol + "'";
-        else if(titol != null && !firstCond) {
-        	select += "WHERE titol = '" + titol + "'";
-        	firstCond = true;
-        }
-        if(empresa != null && firstCond)
+
+        if(empresa != null)
         	select += " AND empresa_id = " + empresa;
-        else if(empresa != null && !firstCond) {
-        	select += "WHERE empresa_id = " + empresa;
-        	firstCond = true;
-        }
+        
         if(order != null)
         	select += " ORDER BY data_de_publicacio " + order;
         

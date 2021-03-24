@@ -3,6 +3,8 @@ package com.back.app.controladores;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -40,6 +42,7 @@ public class CandidatController {
 	
 	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/crearCandidatura/{idOferta}")
+	@Transactional
 	public MensajeRespuesta createCandidat(Authentication authentication, @PathVariable Long idOferta){
 		String email = authentication.getName();
 		User user = userRepository.findByEmail(email).get();
@@ -60,7 +63,8 @@ public class CandidatController {
 			candidatRepository.save(candidat);
 		}
 		
-		//emailService.sendSimpleMessage(usuario.getEmail(), "Mensaje generado para su contraseña", pass, null);
+		emailService.sendSimpleMessage(ofertaRepository.findById(idOferta).get().getEmpresa().getCorreu(), "Solicitud de candidatura de " + email, 
+				"El usuario se ha inscrito a su oferta", null);
 		
 		return new MensajeRespuesta("ok");
 	}
