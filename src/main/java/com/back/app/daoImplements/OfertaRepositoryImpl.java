@@ -20,7 +20,7 @@ public class OfertaRepositoryImpl implements OfertaRepositoryCustom{
 	public List<Oferta> findfertasByParameters(Long categoria, String ubicacio, String titol, Long empresa,
 			String order) {
 		
-		String select = "SELECT * FROM oferta WHERE estat = 1";
+		String select = "SELECT * FROM oferta WHERE estat = 1 AND data_de_publicacio > DATE_SUB(now(), INTERVAL 3 MONTH)";
 
         if(categoria != null)
         	select += " AND categoria_id = " + categoria;
