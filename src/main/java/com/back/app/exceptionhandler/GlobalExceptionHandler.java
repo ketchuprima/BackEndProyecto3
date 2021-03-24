@@ -10,7 +10,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.back.app.responses.MensajeRespuesta;
 
-//@ControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)

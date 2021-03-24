@@ -19,11 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.back.app.exceptions.NoEncontradoException;
-import com.back.app.modelos.Categoria;
-import com.back.app.modelos.Empresa;
 import com.back.app.modelos.Oferta;
-import com.back.app.repositorios.CategoriaRepository;
-import com.back.app.repositorios.EmpresaRepository;
 import com.back.app.repositorios.OfertaRepository;
 import com.back.app.responses.EstadisticasCategoria;
 import com.back.app.responses.MensajeRespuesta;
@@ -38,12 +34,6 @@ public class OfertaController {
 	
 	@Autowired
 	private OfertaRepository ofertaRepository;
-	
-	@Autowired
-	private EmpresaRepository empresaRepository;
-	
-	@Autowired
-	private CategoriaRepository categoriaRepository;
 	
 	@GetMapping("/")
 	public List<Oferta> findOferta(){

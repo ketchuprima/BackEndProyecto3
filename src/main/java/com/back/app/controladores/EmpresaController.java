@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.back.app.exceptions.NoEncontradoException;
 import com.back.app.modelos.Empresa;
-import com.back.app.modelos.User;
 import com.back.app.repositorios.EmpresaRepository;
 import com.back.app.repositorios.UserRepository;
 
