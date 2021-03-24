@@ -1,5 +1,6 @@
 package com.back.app.controladores;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,11 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.back.app.exceptions.NoEncontradoException;
 import com.back.app.modelos.Empresa;
+import com.back.app.modelos.RegistroLogin;
 import com.back.app.modelos.Rol;
 import com.back.app.modelos.User;
 import com.back.app.repositorios.RolRepository;
 import com.back.app.repositorios.UserRepository;
 import com.back.app.repositorios.EmpresaRepository;
+import com.back.app.repositorios.RegistroLoginRepository;
 import com.back.app.requests.LoginRequest;
 import com.back.app.requests.SignupRequest;
 import com.back.app.responses.JwtResponse;
@@ -53,6 +56,9 @@ public class AuthController {
 	
 	@Autowired
 	EmpresaRepository empresaRepository;
+	
+	@Autowired
+	RegistroLoginRepository registroLoginRepository;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -83,6 +89,12 @@ public class AuthController {
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 					.collect(Collectors.toList());
+			
+			RegistroLogin registroLogin = new RegistroLogin();
+			registroLogin.setId(null);
+			registroLogin.setUser(userRepository.findByEmail(loginRequest.getEmail()).get());
+			registroLogin.setData_de_login(LocalDateTime.now());
+			registroLoginRepository.save(registroLogin);
 
 			return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), roles));
 
