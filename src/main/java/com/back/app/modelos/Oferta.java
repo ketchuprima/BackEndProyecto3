@@ -53,7 +53,7 @@ public class Oferta implements Serializable{
 	private Empresa empresa;
 	
 	@ManyToMany
-	@JoinTable(name = "candidat_oferta", joinColumns = @JoinColumn(name = "candidat_id"), inverseJoinColumns = @JoinColumn(name = "oferta_id"))
+	@JoinTable(name = "candidat_oferta", joinColumns = @JoinColumn(name = "oferta_id"), inverseJoinColumns = @JoinColumn(name = "candidat_id"))
 	private List<Candidat> candidats; 
 
 	private static final long serialVersionUID = -8119604915282073567L;

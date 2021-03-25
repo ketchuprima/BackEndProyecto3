@@ -3,6 +3,7 @@ package com.back.app.controladores;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.back.app.modelos.Candidat;
 import com.back.app.modelos.Oferta;
@@ -61,11 +64,17 @@ public class CandidatController {
 			candidat.getOfertes().add(ofertaRepository.findById(idOferta).get());
 
 			candidatRepository.save(candidat);
-		}
+		}		
+		
+		return new MensajeRespuesta("ok");
+	}
+	
+	@PostMapping("/enviarCV/{idOferta}")
+	public MensajeRespuesta enviarCurriculum(@RequestParam("curriculum") MultipartFile file, Authentication authentication, @PathVariable Long idOferta) throws MessagingException {
+		String email = authentication.getName();
 		
 		emailService.sendSimpleMessage(ofertaRepository.findById(idOferta).get().getEmpresa().getCorreu(), "Solicitud de candidatura de " + email, 
-				"El usuario se ha inscrito a su oferta", null);
-		
+				email, file);
 		return new MensajeRespuesta("ok");
 	}
 
